@@ -4,4 +4,7 @@
    <FileRef
       location = "group:1_Structure.playground">
    </FileRef>
+   <FileRef
+      location = "group:/Users/S-Shimotori/Documents/trySwiftTokyo2024/Playgrounds/2_Message.md">
+   </FileRef>
 </Workspace>
