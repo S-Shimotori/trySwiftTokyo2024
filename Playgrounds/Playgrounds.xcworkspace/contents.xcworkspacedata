@@ -7,4 +7,7 @@
    <FileRef
       location = "group:2_Message.md">
    </FileRef>
+   <FileRef
+      location = "group:3_POSIX.playground">
+   </FileRef>
 </Workspace>
