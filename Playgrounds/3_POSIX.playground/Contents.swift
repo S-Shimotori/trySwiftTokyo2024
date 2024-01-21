@@ -97,3 +97,18 @@ withUnsafePointer(to: destinationAddress) { pointerToDestinationAddress in
 }
 
 /// `sendto(::::::)` の求める `UnsafePointer<sockaddr>` が得られたはずです。
+
+/// ソケット通信で用いる関数は失敗することがあります。
+///
+/// `socket` 関数はソケットを作成するための関数で、用途に応じた設定値を渡してソケットを作成します。
+/// 作成に成功すれば `-1` 以外の値を得られます。エラーは発生していないので `errno` は `0` を指します。
+
+let validFileDescriptor = socket(PF_INET, SOCK_DGRAM, IPPROTO_ICMP)
+assert(validFileDescriptor != -1 && errno == 0)
+
+/// ソケット作成に失敗すると `-1` が返ります。
+
+let invalidFileDescriptor = socket(PF_INET, SOCK_DGRAM, -1)
+print("file descriptor = \(invalidFileDescriptor), errno = \(errno)")
+
+/// 今回失敗した原因は第3引数に存在しないプロトコルを渡したことなので `errno` は `43` すなわち `EPROTONOSUPPORT` を指します。
