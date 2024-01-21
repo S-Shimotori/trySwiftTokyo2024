@@ -10,4 +10,7 @@
    <FileRef
       location = "group:3_POSIX.playground">
    </FileRef>
+   <FileRef
+      location = "group:ICMPSocket.playground">
+   </FileRef>
 </Workspace>
