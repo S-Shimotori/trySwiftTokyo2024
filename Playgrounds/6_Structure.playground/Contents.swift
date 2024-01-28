@@ -1,4 +1,4 @@
-/// # Chapter 5. Structure
+/// # Chapter 6. Structure
 
 import Foundation
 

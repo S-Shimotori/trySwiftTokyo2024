@@ -8,18 +8,18 @@
       location = "group:2_Ping.md">
    </FileRef>
    <FileRef
-      location = "group:3_NonCopyable.playground">
+      location = "group:3_POSIX.playground">
    </FileRef>
    <FileRef
-      location = "group:4_Message.md">
+      location = "group:4_NonCopyable.playground">
    </FileRef>
    <FileRef
-      location = "group:5_Structure.playground">
+      location = "group:5_Message.md">
    </FileRef>
    <FileRef
-      location = "group:6_POSIX.playground">
+      location = "group:6_Structure.playground">
    </FileRef>
    <FileRef
-      location = "group:ICMPSocket.playground">
+      location = "group:7_ICMP+Socket.playground">
    </FileRef>
 </Workspace>

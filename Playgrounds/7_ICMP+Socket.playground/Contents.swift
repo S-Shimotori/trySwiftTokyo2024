@@ -1,3 +1,7 @@
+/// # Chapter 7. ICMP + Socket
+///
+/// 本章では実際にデータグラムソケットを用いてICMP Echo Requestを送信し、別のデータグラムソケットでICMP Echo Replyを受信します。
+
 import Foundation
 
 /// 本Playgroundでは、ソケットでICMP Echoメッセージを区別することが不可能であることを確認します。

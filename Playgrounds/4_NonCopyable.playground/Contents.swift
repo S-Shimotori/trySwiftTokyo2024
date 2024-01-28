@@ -1,4 +1,4 @@
-/// # Chapter 3. ~Copyable
+/// # Chapter 4. ~Copyable
 
 import Foundation
 
