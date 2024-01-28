@@ -1,4 +1,4 @@
-# Chapter 2. Message
+# Chapter 4. Message
 
 本章ではICMP Echo Requestの作成方法について検討します。
 

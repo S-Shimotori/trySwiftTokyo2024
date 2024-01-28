@@ -1,3 +1,7 @@
+/// # Chapter 6. POSIX
+///
+/// 本章では実際にICMP Echo Requestを送信しICMP Echo Replyを受信します。
+
 /// POSIXソケット通信では次の構造体や関数などを使用します。
 ///
 /// - netinet

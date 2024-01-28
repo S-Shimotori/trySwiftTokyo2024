@@ -2,22 +2,22 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:NonCopyable.playground">
+      location = "group:1_Socket.md">
    </FileRef>
    <FileRef
-      location = "group:Socket.md">
+      location = "group:2_Ping.md">
    </FileRef>
    <FileRef
-      location = "group:1_Structure.playground">
+      location = "group:3_NonCopyable.playground">
    </FileRef>
    <FileRef
-      location = "group:2_Message.md">
+      location = "group:4_Message.md">
    </FileRef>
    <FileRef
-      location = "group:3_POSIX.playground">
+      location = "group:5_Structure.playground">
    </FileRef>
    <FileRef
-      location = "group:Ping.md">
+      location = "group:6_POSIX.playground">
    </FileRef>
    <FileRef
       location = "group:ICMPSocket.playground">
