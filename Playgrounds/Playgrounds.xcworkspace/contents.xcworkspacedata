@@ -5,6 +5,9 @@
       location = "group:NonCopyable.playground">
    </FileRef>
    <FileRef
+      location = "group:Socket.md">
+   </FileRef>
+   <FileRef
       location = "group:1_Structure.playground">
    </FileRef>
    <FileRef
