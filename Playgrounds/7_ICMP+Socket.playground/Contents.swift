@@ -4,19 +4,18 @@
 
 import Foundation
 
-/// 本Playgroundでは、ソケットでICMP Echoメッセージを区別することが不可能であることを確認します。
-
-/// ソケットを2つ用意します。 `socketA` からICMP Echo Requestを送信し `socketB` でポーリングを行います。
-/// ソケットによるICMP Echoメッセージの区別が不可能だとすると `socketA` から送信し `socketB` で受信できるはずです。
+/// ソケットを2つ用意します。 `socketA` からICMP Echo Requestを送信し `socketB` でICMP Echo Replyを受信します。
+/// ソケットによるICMP Echo Replyの分類や区別が不可能だとすると `socketA` から送信しても `socketB` で問題なく受信できるはずです。
 
 let socketA = socket(PF_INET, SOCK_DGRAM, IPPROTO_ICMP)
 let socketB = socket(PF_INET, SOCK_DGRAM, IPPROTO_ICMP)
 
 /// 同じパラメータを与えましたが異なるファイルディスクリプタが得られるはずです。
+/// `socketA` と `socketB` は別のソケットです。
 
 assert(socketA != socketB)
 
-/// 今回は自分宛にPingを送信します。127.0.0.1宛の `sockaddr_in` インスタンスを作成します。
+/// 今回は自分宛にPingを送信します。127.0.0.1宛の `sockaddr_in` オブジェクトを作成します。
 
 let destinationAddress = sockaddr_in(
     sin_len: __uint8_t(MemoryLayout<sockaddr_in>.size),
@@ -51,7 +50,7 @@ let sizeOfSentData = message.withUnsafeBytes { rawBufferPointerToMessage in
 
 assert(sizeOfSentData == message.count)
 
-/// 対のICMP Echo Replyを受信します。 `socketA` ではなく `socketB` が読めるようになるまで待ちます。
+/// 対のICMP Echo Replyを受信します。 `socketA` ではなく `socketB` を使い受信メッセージを読めるようになるまで待ちます。
 
 var pollfds = [pollfd(fd: socketB, events: Int16(POLLIN), revents: 0)]
 while true {
@@ -137,3 +136,6 @@ let sequenceNumber = receivedRawMessage[6 ... 7].joined(separator: " ")
 
 close(socketA)
 close(socketB)
+
+/// 実際のPingプログラムでデータグラムソケットを複数持つ必要はなく、ひとつのソケットで全ICMP Echo Replyを受信すればよいです。
+/// Swiftプログラム上で送信元ホストごとにICMP Echo Replyを取りまとめてPing結果をインターフェースに出力することになります。
