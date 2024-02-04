@@ -32,7 +32,19 @@ extension UDPConnection: UDPConnectionProtocol {
         receivedMessageSubject.eraseToAnyPublisher()
     }
 
-    func send(message: Data, to: String) throws {
-        fatalError("TODO: implement ``UDPConnection/send(message:to:)``")
+    func send(message: Data, to address: String) throws {
+        let ipv4Address = inet_addr(address)
+        guard ipv4Address != INADDR_NONE else {
+            fatalError("TODO: handle invalid address error")
+        }
+
+        let internetAddress = sockaddr_in(
+            sin_len: __uint8_t(MemoryLayout<sockaddr_in>.size),
+            sin_family: sa_family_t(AF_INET),
+            sin_port: 0,
+            sin_addr: in_addr(s_addr: ipv4Address),
+            sin_zero: (0, 0, 0, 0, 0, 0, 0, 0)
+        )
+        try fileDescriptor.send(message: message, to: internetAddress)
     }
 }
