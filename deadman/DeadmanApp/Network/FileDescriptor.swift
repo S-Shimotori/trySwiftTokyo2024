@@ -75,7 +75,7 @@ struct FileDescriptor: ~Copyable {
         }
     }
 
-    func recvfrom() throws -> (sockaddr_in, Data) {
+    func recvfrom() throws -> ReceivedSocketMessage {
         let lengthOfBuffer = Int(BUFSIZ)
 
         var receivedData = Data(Array(repeating: UInt8(0), count: lengthOfBuffer))
@@ -107,7 +107,7 @@ struct FileDescriptor: ~Copyable {
             throw POSIXError(code)
         }
 
-        return (sourceAddress, receivedData)
+        return .init(sourceAddress: sourceAddress, rawData: receivedData)
     }
 
     consuming func close() throws {
