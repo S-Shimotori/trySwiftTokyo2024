@@ -107,7 +107,7 @@ struct FileDescriptor: ~Copyable {
             throw POSIXError(code)
         }
 
-        return .init(sourceAddress: sourceAddress, rawData: receivedData)
+        return .init(sourceAddress: sourceAddress, rawData: receivedData[0 ..< lengthOfReceivedMessage])
     }
 
     consuming func close() throws {
