@@ -53,7 +53,8 @@ struct FileDescriptor: ~Copyable {
     }
 
     deinit {
-        Darwin.close(fd)
+        // discard result because `deinit` cannot throw an error
+        _ = Darwin.close(fd)
     }
 
     func send(message: String) {
