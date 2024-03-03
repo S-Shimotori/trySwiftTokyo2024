@@ -17,3 +17,15 @@ targets:
     sources:
     - DeadmanApp
     - project.yml
+    scheme:
+      testTargets:
+      - DeadmanAppTests
+  DeadmanAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    info:
+      path: "./DeadmanAppTests/Info.plist"
+    sources:
+    - DeadmanAppTests
+    dependencies:
+    - target: DeadmanApp
