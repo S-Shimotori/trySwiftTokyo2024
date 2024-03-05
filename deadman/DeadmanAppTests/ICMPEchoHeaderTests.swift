@@ -42,8 +42,8 @@ final class ICMPEchoHeaderTests: XCTestCase {
             let header = ICMPEchoHeader(testCase.input)
             XCTAssertEqual(header?.type.rawValue, testCase.expected?.type.rawValue, line: testCase.line)
             XCTAssertEqual(header?.code, testCase.expected?.code, line: testCase.line)
-            XCTAssertEqual(header?.id, testCase.expected?.id.byteSwapped, line: testCase.line)
-            XCTAssertEqual(header?.sequence, testCase.expected?.sequence.byteSwapped, line: testCase.line)
+            XCTAssertEqual(header?.id, testCase.expected?.id, line: testCase.line)
+            XCTAssertEqual(header?.sequence, testCase.expected?.sequence, line: testCase.line)
 
             if var header {
                 XCTAssertEqual(
