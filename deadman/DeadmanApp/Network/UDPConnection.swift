@@ -9,9 +9,15 @@ import Combine
 import Foundation
 
 protocol UDPConnectionProtocol {
+    /// A publisher that publishes received messages.
     var receivedMessagePublisher: AnyPublisher<Data, any Error> { get }
 
-    func send(message: Data, to: String) throws
+    /// Sends a message to a given address.
+    /// - Parameters:
+    ///   - message: Data to send.
+    ///   - address: An internet address for destination.
+    /// - Throws: `POSIXError`
+    func send(message: Data, to address: String) throws
 }
 
 // MARK: - UDPConnection
