@@ -36,6 +36,23 @@ struct ICMPEchoHeader {
             UInt64($0)
         }.internetChecksum
     }
+
+    init?(_ data: Data) {
+        guard MemoryLayout<Self>.size <= data.count else {
+            return nil
+        }
+
+        self = data.withUnsafeBytes {
+            $0.load(as: ICMPEchoHeader.self)
+        }
+
+        guard type == .echoReply || type == .echoRequest else {
+            return nil
+        }
+        guard code == 0 else {
+            return nil
+        }
+    }
 }
 
 extension ICMPEchoHeader {
