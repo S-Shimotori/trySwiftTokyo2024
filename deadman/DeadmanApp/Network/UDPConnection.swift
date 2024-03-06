@@ -10,7 +10,7 @@ import Foundation
 
 protocol UDPConnectionProtocol {
     /// A publisher that publishes received messages.
-    var receivedMessagePublisher: AnyPublisher<Data, any Error> { get }
+    var receivedMessagePublisher: AnyPublisher<IPMessage, any Error> { get }
 
     /// Sends a message to a given address.
     /// - Parameters:
@@ -18,24 +18,55 @@ protocol UDPConnectionProtocol {
     ///   - address: An internet address for destination.
     /// - Throws: `POSIXError`
     func send(message: Data, to address: String) throws
+
+    func beginPollingMessages()
+
+    func stopPollingMessages()
 }
 
 // MARK: - UDPConnection
 
 class UDPConnection {
+    /// - ToDo: Inject a socket
     private let fileDescriptor: FileDescriptor
-    private let receivedMessageSubject = PassthroughSubject<Data, Error>()
+    private let dateProvider: any DateProviderProtocol
 
-    init(fileDescriptor: consuming FileDescriptor) {
+    private let receivedMessageSubject = PassthroughSubject<IPMessage, Error>()
+    private var pollingTask: Task<Void, any Error>?
+
+    init(fileDescriptor: consuming FileDescriptor, dateProvider: some DateProviderProtocol) {
         self.fileDescriptor = fileDescriptor
+        self.dateProvider = dateProvider
     }
 }
 
 // MARK: extension (UDPConnectionProtocol)
 
 extension UDPConnection: UDPConnectionProtocol {
-    var receivedMessagePublisher: AnyPublisher<Data, any Error> {
+    var receivedMessagePublisher: AnyPublisher<IPMessage, any Error> {
         receivedMessageSubject.eraseToAnyPublisher()
+    }
+
+    func beginPollingMessages() {
+        guard pollingTask?.isCancelled != false else { return }
+        pollingTask = Task {
+            while true {
+                do {
+                    try await fileDescriptor.poll()
+                    let receivedDate = dateProvider.now
+                    let rawMessage = try fileDescriptor.recvfrom()
+                    try receivedMessageSubject.send(.init(data: rawMessage.rawData, receivedDate: receivedDate))
+                }
+                catch {
+                    // TODO: Handle errors on socket
+                    receivedMessageSubject.send(completion: .failure(error))
+                }
+            }
+        }
+    }
+
+    func stopPollingMessages() {
+        pollingTask?.cancel()
     }
 
     func send(message: Data, to address: String) throws {

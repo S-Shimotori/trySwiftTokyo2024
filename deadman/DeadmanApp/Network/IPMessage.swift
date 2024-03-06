@@ -19,10 +19,12 @@ struct IPMessage {
 
     let data: Data
 
+    let receivedDate: Date
+
     // MARK: Initializer
 
     /// Creates an instance from binary data.
-    init(_ data: Data) throws {
+    init(data: Data, receivedDate: Date) throws {
         // validate the length of given data
 
         let minimumLengthOfIPv4Header = MemoryLayout<IPv4Header>.size
@@ -49,5 +51,7 @@ struct IPMessage {
         self.sourceAddress = ipv4Header.sourceIPAddress
         self.destinationAddress = ipv4Header.destinationIPAddress
         self.data = data[lengthOfIPv4Header ..< data.count]
+
+        self.receivedDate = receivedDate
     }
 }
