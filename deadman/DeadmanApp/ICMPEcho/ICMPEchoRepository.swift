@@ -10,7 +10,7 @@ import Combine
 protocol ICMPEchoRepositoryProtocol {
     var resultPublisher: AnyPublisher<ICMPEchoResult, any Error> { get }
 
-    func sendRequest(identifier: UInt16, sequence: UInt16, to address: String)
+    func sendRequest(identifier: UInt16, sequenceNumber: UInt16, to address: String)
 }
 
 // MARK: - ICMPEchoRepository
@@ -31,7 +31,7 @@ extension ICMPEchoRepository: ICMPEchoRepositoryProtocol {
         resultSubject.eraseToAnyPublisher()
     }
 
-    func sendRequest(identifier: UInt16, sequence: UInt16, to address: String) {
+    func sendRequest(identifier: UInt16, sequenceNumber: UInt16, to address: String) {
         fatalError("TODO: implement ``ICMPEchoRepository/send(identifier:sequence:to:)``")
     }
 }

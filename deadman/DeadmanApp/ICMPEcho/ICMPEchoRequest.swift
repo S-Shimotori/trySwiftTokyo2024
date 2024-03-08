@@ -13,10 +13,10 @@ struct ICMPEchoRequest {
     /// - ToDo: Support variable-length payload
     let payload: (Int64, Int64, Int64, Int64, Int64, Int64, Int64) = (0, 0, 0, 0, 0, 0, 0)
 
-    init(id: UInt16, sequence: UInt16) {
+    init(identifier: UInt16, sequenceNumber: UInt16) {
         self.header = ICMPEchoHeader.request(
-            id: id,
-            sequence: sequence
+            identifier: identifier,
+            sequenceNumber: sequenceNumber
         )
     }
 

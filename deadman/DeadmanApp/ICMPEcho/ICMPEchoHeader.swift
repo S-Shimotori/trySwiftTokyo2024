@@ -11,24 +11,24 @@ struct ICMPEchoHeader {
     let type: ICMPType
     let code: UInt8
     let checksum: UInt16
-    private let _id: UInt16
-    private let _sequence: UInt16
+    private let _identifier: UInt16
+    private let _sequenceNumber: UInt16
 
-    var id: UInt16 {
-        _id.byteSwapped
+    var identifier: UInt16 {
+        _identifier.byteSwapped
     }
 
-    var sequence: UInt16 {
-        _sequence.byteSwapped
+    var sequenceNumber: UInt16 {
+        _sequenceNumber.byteSwapped
     }
 
     // MARK: Initializers
 
-    private init(type: ICMPType, id: UInt16, sequence: UInt16) {
+    private init(type: ICMPType, identifier: UInt16, sequenceNumber: UInt16) {
         self.type = type
         self.code = 0
-        self._id = id.bigEndian
-        self._sequence = sequence.bigEndian
+        self._identifier = identifier.bigEndian
+        self._sequenceNumber = sequenceNumber.bigEndian
 
         let typeCode = Data([
             self.type.rawValue,
@@ -38,8 +38,8 @@ struct ICMPEchoHeader {
         }
         self.checksum = [
             typeCode,
-            self._id,
-            self._sequence
+            self._identifier,
+            self._sequenceNumber
         ].map {
             UInt64($0)
         }.internetChecksum
@@ -64,7 +64,7 @@ struct ICMPEchoHeader {
 }
 
 extension ICMPEchoHeader {
-    static func request(id: UInt16, sequence: UInt16) -> ICMPEchoHeader {
-        .init(type: .echoRequest, id: id, sequence: sequence)
+    static func request(identifier: UInt16, sequenceNumber: UInt16) -> ICMPEchoHeader {
+        .init(type: .echoRequest, identifier: identifier, sequenceNumber: sequenceNumber)
     }
 }

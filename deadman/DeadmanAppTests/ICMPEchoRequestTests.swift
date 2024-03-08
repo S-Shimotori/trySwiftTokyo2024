@@ -11,9 +11,9 @@ import XCTest
 final class ICMPEchoRequestTests: XCTestCase {
     func testRawData() {
         let testCases: [RawDataTestCase] = [
-            .init(id: 1, sequence: 0, checksum: 0xF7FE),
-            .init(id: 4, sequence: 5, checksum: 0xF7F6),
-            .init(id: 1024, sequence: 1280, checksum: 0xEEFF),
+            .init(identifier: 1, sequenceNumber: 0, checksum: 0xF7FE),
+            .init(identifier: 4, sequenceNumber: 5, checksum: 0xF7F6),
+            .init(identifier: 1024, sequenceNumber: 1280, checksum: 0xEEFF),
         ]
 
         for testCase in testCases {
@@ -27,17 +27,17 @@ final class ICMPEchoRequestTests: XCTestCase {
 
         let line: UInt
 
-        init(id: UInt16, sequence: UInt16, checksum: UInt16, line: UInt = #line) {
-            self.input = ICMPEchoRequest(id: id, sequence: sequence).rawData
+        init(identifier: UInt16, sequenceNumber: UInt16, checksum: UInt16, line: UInt = #line) {
+            self.input = ICMPEchoRequest(identifier: identifier, sequenceNumber: sequenceNumber).rawData
 
             let expectedBytes: [UInt8] = [
                 8, // type
                 0, // code
             ]
             + [
-                checksum, // checksum
-                id, // identifier
-                sequence, // sequence
+                checksum,
+                identifier,
+                sequenceNumber,
             ].flatMap { [$0.upperBits, $0.lowerBits] }
             + Array(repeating: UInt8(0), count: 64 * 7 / 8) // payload
             self.expected = Data(expectedBytes)

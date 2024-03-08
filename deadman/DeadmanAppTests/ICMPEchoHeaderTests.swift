@@ -14,12 +14,12 @@ final class ICMPEchoHeaderTests: XCTestCase {
             // request
             .init(
                 input: Data([UInt8(0x8), 0x0, 0xF7, 0xF6, 0x0, 0x4, 0x0, 0x5]),
-                expected: (type: .echoRequest, code: 0, id: 4, sequence: 5)
+                expected: (type: .echoRequest, code: 0, identifier: 4, sequenceNumber: 5)
             ),
             // reply
             .init(
                 input: Data([UInt8(0x0), 0x0, 0xFF, 0xF6, 0x0, 0x4, 0x0, 0x5]),
-                expected: (type: .echoReply, code: 0, id: 4, sequence: 5)
+                expected: (type: .echoReply, code: 0, identifier: 4, sequenceNumber: 5)
             ),
             // too short
             .init(
@@ -42,8 +42,8 @@ final class ICMPEchoHeaderTests: XCTestCase {
             let header = ICMPEchoHeader(testCase.input)
             XCTAssertEqual(header?.type.rawValue, testCase.expected?.type.rawValue, line: testCase.line)
             XCTAssertEqual(header?.code, testCase.expected?.code, line: testCase.line)
-            XCTAssertEqual(header?.id, testCase.expected?.id, line: testCase.line)
-            XCTAssertEqual(header?.sequence, testCase.expected?.sequence, line: testCase.line)
+            XCTAssertEqual(header?.identifier, testCase.expected?.identifier, line: testCase.line)
+            XCTAssertEqual(header?.sequenceNumber, testCase.expected?.sequenceNumber, line: testCase.line)
 
             if var header {
                 XCTAssertEqual(
@@ -57,11 +57,11 @@ final class ICMPEchoHeaderTests: XCTestCase {
 
     private struct LoadDataTestCase {
         let input: Data
-        let expected: (type: ICMPType, code: UInt8, id: UInt16, sequence: UInt16)?
+        let expected: (type: ICMPType, code: UInt8, identifier: UInt16, sequenceNumber: UInt16)?
 
         let line: UInt
 
-        init(input: Data, expected: (type: ICMPType, code: UInt8, id: UInt16, sequence: UInt16)?, line: UInt = #line) {
+        init(input: Data, expected: (type: ICMPType, code: UInt8, identifier: UInt16, sequenceNumber: UInt16)?, line: UInt = #line) {
             self.input = input
             self.expected = expected
             self.line = line
