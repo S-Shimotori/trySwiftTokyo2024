@@ -3,12 +3,12 @@ import Foundation
 public struct IPv4Header {
     let vhl: UInt8
     let typeOfService: UInt8
-    let totalLength: UInt16
-    let identification: UInt16
-    let offset: UInt16
+    private let _totalLength: UInt16
+    private let _identification: UInt16
+    private let _offset: UInt16
     let timeToLive: UInt8
-    let `protocol`: UInt8
-    let checksum: UInt16
+    let `protocol`: IPProtocol
+    private let _checksum: UInt16
     let sourceIPAddress: in_addr
     let destinationIPAddress: in_addr
 

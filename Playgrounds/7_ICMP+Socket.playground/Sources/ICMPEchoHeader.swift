@@ -1,28 +1,38 @@
 import Foundation
 
 public struct ICMPEchoHeader {
-    let type: UInt8
+    let type: ICMPType
     let code: UInt8
     let checksum: UInt16
-    let id: UInt16
-    let sequence: UInt16
+    private let _identifier: UInt16
+    private let _sequenceNumber: UInt16
 
-    public init(id: UInt16, sequence: UInt16) {
-        self.type = UInt8(ICMP_ECHO)
+    public var identifier: UInt16 {
+        _identifier.byteSwapped
+    }
+
+    public var sequenceNumber: UInt16 {
+        _sequenceNumber.byteSwapped
+    }
+
+    // MARK: Initializers
+
+    init(type: ICMPType, identifier: UInt16, sequenceNumber: UInt16) {
+        self.type = type
         self.code = 0
-        self.id = id.bigEndian
-        self.sequence = sequence.bigEndian
+        self._identifier = identifier.bigEndian
+        self._sequenceNumber = sequenceNumber.bigEndian
 
         let typeCode = Data([
-            self.type,
+            self.type.rawValue,
             self.code
         ]).withUnsafeBytes {
             $0.load(as: UInt16.self)
         }
         self.checksum = [
             typeCode,
-            self.id,
-            self.sequence
+            self._identifier,
+            self._sequenceNumber
         ].map {
             UInt64($0)
         }.checksum

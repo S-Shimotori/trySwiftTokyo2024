@@ -4,10 +4,11 @@ public struct ICMPEchoRequest {
     let header: ICMPEchoHeader
     let payload: (Int64, Int64, Int64, Int64, Int64, Int64, Int64) = (0, 0, 0, 0, 0, 0, 0)
 
-    public init(id: UInt16, sequence: UInt16) {
+    public init(identifier: UInt16, sequenceNumber: UInt16) {
         self.header = ICMPEchoHeader(
-            id: id,
-            sequence: sequence
+            type: .echoRequest,
+            identifier: identifier,
+            sequenceNumber: sequenceNumber
         )
     }
 

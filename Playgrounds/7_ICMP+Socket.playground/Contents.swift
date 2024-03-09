@@ -27,7 +27,7 @@ let destinationAddress = sockaddr_in(
 
 /// identifier = 4, sequence number = 5でICMP Echo Requestメッセージを作成します。
 
-let message = ICMPEchoRequest(id: 4, sequence: 5).rawData
+let message = ICMPEchoRequest(identifier: 4, sequenceNumber: 5).rawData
 
 /// `destinationAddress` 宛に `message` を送信します。
 
