@@ -39,7 +39,7 @@ public struct ICMPEchoHeader {
     }
 
     public init?(_ data: Data) {
-        guard data.count >= MemoryLayout<Self>.size else {
+        guard MemoryLayout<Self>.size <= data.count else {
             return nil
         }
 

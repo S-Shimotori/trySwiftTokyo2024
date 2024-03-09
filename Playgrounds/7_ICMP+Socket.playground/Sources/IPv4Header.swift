@@ -12,19 +12,21 @@ public struct IPv4Header {
     let sourceIPAddress: in_addr
     let destinationIPAddress: in_addr
 
+    // TODO: properties to retrieve values larger than 1 byte
+
+    public var ihl: Int {
+        Int(vhl & 0xF)
+    }
+
+    // MARK: Initializers
+
     public init?(_ data: Data) {
-        guard data.count >= MemoryLayout<Self>.size else {
+        guard MemoryLayout<Self>.size <= data.count else {
             return nil
         }
 
         self = data.withUnsafeBytes {
             $0.load(as: IPv4Header.self)
         }
-    }
-}
-
-extension IPv4Header {
-    public var ihl: Int {
-        Int(vhl & 0xF)
     }
 }
