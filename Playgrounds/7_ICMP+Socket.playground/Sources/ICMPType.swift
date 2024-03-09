@@ -11,6 +11,6 @@ public struct ICMPType: RawRepresentable {
 // MARK: List of IP protocols
 
 extension ICMPType {
-    static let echoReply = ICMPType(rawValue: UInt8(ICMP_ECHOREPLY))
+    public static let echoReply = ICMPType(rawValue: UInt8(ICMP_ECHOREPLY))
     static let echoRequest = ICMPType(rawValue: UInt8(ICMP_ECHO))
 }

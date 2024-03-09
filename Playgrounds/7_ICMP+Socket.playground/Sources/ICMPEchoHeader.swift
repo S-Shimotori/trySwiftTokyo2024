@@ -1,7 +1,7 @@
 import Foundation
 
 public struct ICMPEchoHeader {
-    let type: ICMPType
+    public let type: ICMPType
     let code: UInt8
     let checksum: UInt16
     private let _identifier: UInt16
@@ -45,6 +45,13 @@ public struct ICMPEchoHeader {
 
         self = data.withUnsafeBytes {
             $0.load(as: ICMPEchoHeader.self)
+        }
+
+        guard type == .echoReply || type == .echoRequest else {
+            return nil
+        }
+        guard code == 0 else {
+            return nil
         }
     }
 }

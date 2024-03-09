@@ -109,29 +109,20 @@ let sizeOfIPv4Header = ipv4Header.ihl * 4
 let sizeOfICMPHeader = MemoryLayout<ICMPEchoHeader>.size
 
 /// IPv4ヘッダから先のデータを見てみましょう。
-/// type 8bit, code 8bit, checksum 16bit, identifier 16bit, sequence number 16bitです。
-
-let receivedRawMessage = Array(bufferData[sizeOfIPv4Header ..< sizeOfIPv4Header + sizeOfICMPHeader])
-    .map { String($0, radix: 2) }
-    .map { String(repeating: "0", count: 8 - $0.count) + $0 }
-
-let type = receivedRawMessage[0]
-let identifier = receivedRawMessage[4 ... 5].joined(separator: " ")
-let sequenceNumber = receivedRawMessage[6 ... 7].joined(separator: " ")
+let receivedICMPEchoHeader = ICMPEchoHeader(bufferData[sizeOfIPv4Header ..< sizeOfIPv4Header + sizeOfICMPHeader])
 
 /// 次の値が得られるはずです：
 ///
-/// - type = `00000000`
-/// - identifier = `00000000 00000100`
-/// - sequence number = `00000000 00000101`
+/// - type = `00000000` = `ICMP_ECHOREPLY`
+/// - identifier = `00000000 00000100` = 4
+/// - sequence number = `00000000 00000101` = 5
 ///
-/// ネットワークバイトオーダつまりビッグエンディアンで格納されているのでそのまま読んで10進数に戻します。
-///
-/// - type = `0` すなわち `ICMP_ECHOREPLY`
-/// - identifier = `4`
-/// - sequence number = `5`
-///
-/// となります。
+/// ネットワークバイトオーダつまりビッグエンディアンで格納されていることを踏まえて値を確認します。
+
+assert(receivedICMPEchoHeader?.type.rawValue == UInt8(ICMP_ECHOREPLY))
+assert(receivedICMPEchoHeader?.identifier == 4)
+assert(receivedICMPEchoHeader?.sequenceNumber == 5)
+
 /// `socketA` から送ったICMP Echo Requestの返信を `socketB` で受信できました。
 
 close(socketA)
