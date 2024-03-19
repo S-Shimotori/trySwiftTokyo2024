@@ -12,9 +12,10 @@ enum ICMPEchoResult {
     ///   - sourceAddress: Who sent this reply.
     ///   - identifier: The identifier of this reply.
     ///   - sequenceNumber: The sequence number of this reply.
+    ///   - ttl: Time To Live.
     ///   - rtt: Round Trip Time until this reply was received.
     ///   - data: Payload data.
-    case reply(sourceAddress: in_addr, identifier: UInt16, sequenceNumber: UInt16, rtt: TimeInterval, data: Data?)
+    case reply(sourceAddress: in_addr, identifier: UInt16, sequenceNumber: UInt16, ttl: UInt8, rtt: TimeInterval, data: Data?)
 
     /// - Parameters:
     ///   - identifier: The identifier of the request.
