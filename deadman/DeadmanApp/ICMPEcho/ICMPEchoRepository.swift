@@ -10,17 +10,32 @@ import Combine
 protocol ICMPEchoRepositoryProtocol {
     var resultPublisher: AnyPublisher<ICMPEchoResult, any Error> { get }
 
-    func sendRequest(identifier: UInt16, sequenceNumber: UInt16, to address: String)
+    /// Sends an ICMP Echo Request.
+    /// - Parameters:
+    ///   - identifier: The identifier of the ICMP Echo Request.
+    ///   - sequenceNumber: The sequence number of the ICMP Echo Request.
+    ///   - address: A destination address.
+    ///   - timeout: How long waiting for the request's reply.
+    func sendRequest(identifier: UInt16, sequenceNumber: UInt16, to address: String, timeout: ContinuousClock.Duration) throws
 }
 
 // MARK: - ICMPEchoRepository
 
 class ICMPEchoRepository {
     private let udpConnection: any UDPConnectionProtocol
+    private var cancellables = [AnyCancellable]()
+
     private let resultSubject = PassthroughSubject<ICMPEchoResult, Error>()
 
     init(udpConnection: some UDPConnectionProtocol) {
         self.udpConnection = udpConnection
+        udpConnection.receivedMessagePublisher.sink { error in
+            fatalError("TODO: handle fatal errors")
+        } receiveValue: { [weak self] message in
+            guard let self else { return }
+            resultSubject.send(readICMPEchoReply(from: message))
+        }.store(in: &cancellables)
+        udpConnection.beginPollingMessages()
     }
 
     func readICMPEchoReply(from message: IPMessage) -> ICMPEchoResult {
@@ -63,7 +78,11 @@ extension ICMPEchoRepository: ICMPEchoRepositoryProtocol {
         resultSubject.eraseToAnyPublisher()
     }
 
-    func sendRequest(identifier: UInt16, sequenceNumber: UInt16, to address: String) {
-        fatalError("TODO: implement ``ICMPEchoRepository/send(identifier:sequence:to:)``")
+    func sendRequest(identifier: UInt16, sequenceNumber: UInt16, to address: String, timeout: ContinuousClock.Duration) throws {
+        // TODO: Set stopwatch
+        try udpConnection.send(
+            message: ICMPEchoRequest(identifier: identifier, sequenceNumber: sequenceNumber).rawData,
+            to: address
+        )
     }
 }
