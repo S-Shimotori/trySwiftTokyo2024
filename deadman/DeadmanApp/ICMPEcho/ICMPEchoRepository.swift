@@ -22,6 +22,38 @@ class ICMPEchoRepository {
     init(udpConnection: some UDPConnectionProtocol) {
         self.udpConnection = udpConnection
     }
+
+    func readICMPEchoReply(from message: IPMessage) -> ICMPEchoResult {
+        let ttl: UInt8
+        switch message.header {
+        case let .v4(ipProtocol: ipProtocol, timeToLive: timeToLive, option: _):
+            guard ipProtocol == .icmp else {
+                fatalError("TODO: handle other types of messages")
+            }
+            ttl = timeToLive
+        }
+
+        guard let icmpEchoHeader = ICMPEchoHeader(message.data) else {
+            return .error(NetworkError.invalidICMPEchoHeader)
+        }
+
+        // TODO: Stop stopwatch and calculate RTT
+
+        let startIndexOfPayloadData = message.data.index(message.data.startIndex, offsetBy: MemoryLayout<ICMPEchoHeader>.size)
+        let endIndexOfPayloadData = message.data.index(message.data.endIndex, offsetBy: 0)
+        let payloadData = MemoryLayout<ICMPEchoHeader>.size < message.data.count
+            ? message.data[startIndexOfPayloadData ..< endIndexOfPayloadData]
+            : nil
+
+        return .reply(
+            sourceAddress: message.sourceAddress,
+            identifier: icmpEchoHeader.identifier,
+            sequenceNumber: icmpEchoHeader.sequenceNumber,
+            ttl: ttl,
+            rtt: .nan, // TODO: Pass RTT
+            data: payloadData
+        )
+    }
 }
 
 // MARK: extension (ICMPEchoRepositoryProtocol)
